@@ -2,10 +2,7 @@ package io.github.simone.art.quarkussocial.rest;
 
 import io.github.simone.art.quarkussocial.rest.dto.CreateUserRequest;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -19,6 +16,11 @@ public class UserResource {
     public Response createUser(CreateUserRequest createUserRequest){
         return Response.ok(createUserRequest).build();
 
+    }
+
+    @GET
+    public Response listAllUsers(){
+        return Response.ok().build();
     }
 
 }
