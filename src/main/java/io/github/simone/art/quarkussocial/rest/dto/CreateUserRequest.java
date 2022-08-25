@@ -1,6 +1,7 @@
 package io.github.simone.art.quarkussocial.rest.dto;
 
 public class CreateUserRequest {
+
     private String name;
     private Integer age;
 
