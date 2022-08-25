@@ -1,11 +1,15 @@
 package io.github.simone.art.quarkussocial.rest.quarkussocial.domain.model;
 
+
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name="users")
-public class User {
+//O PanacheEntityBase tem vários métodos embutidos pra manipular as entidades
+public class User extends PanacheEntityBase {
     @Id
     // anotation @Generated delega ao banco de dados fazer o id automático do objeto
     @GeneratedValue(strategy = GenerationType.IDENTITY)
