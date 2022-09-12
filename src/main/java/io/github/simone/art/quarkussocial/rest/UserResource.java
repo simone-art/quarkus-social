@@ -3,6 +3,7 @@ package io.github.simone.art.quarkussocial.rest;
 
 import io.github.simone.art.quarkussocial.rest.domain.repository.UserRepository;
 import io.github.simone.art.quarkussocial.rest.dto.CreateUserRequest;
+import io.github.simone.art.quarkussocial.rest.dto.ResponseError;
 import io.github.simone.art.quarkussocial.rest.quarkussocial.domain.model.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -39,9 +40,8 @@ public class UserResource {
     public Response createUser(CreateUserRequest userRequest){
         Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(userRequest);
         if(!violations.isEmpty()){
-            ConstraintViolation<CreateUserRequest> erro = violations.stream().findAny().get();
-            String erroMessage = erro.getMessage();
-            return Response.status(400).entity(erroMessage).build();
+            ResponseError responseError = ResponseError.createFromValidation(violations);
+            return Response.status(400).entity(responseError).build();
         }
         //Persistindo os dados do usuário no banco de dados
         User user = new User();
