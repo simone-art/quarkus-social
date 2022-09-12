@@ -1,11 +1,13 @@
 package io.github.simone.art.quarkussocial.rest;
 
 
+import io.github.simone.art.quarkussocial.rest.domain.repository.UserRepository;
 import io.github.simone.art.quarkussocial.rest.dto.CreateUserRequest;
 import io.github.simone.art.quarkussocial.rest.quarkussocial.domain.model.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +20,15 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
+    private UserRepository userRepository;
+
+    @Inject
+    //@Inject anotação pra fazer a injeção de dependência do repository
+    public UserResource(UserRepository userRepository){
+        this.userRepository = userRepository;
+
+    }
+
     @POST
     @Transactional
     //@Transactional é uma anotation que se requer pra fazer a manipulação do banco de dados
@@ -27,7 +38,7 @@ public class UserResource {
         user.setName(userRequest.getName());
         user.setAge(userRequest.getAge());
         //Persiste é o método que salva os dados na entidade
-        user.persist();
+        userRepository.persist(user);
         return Response.ok(user).build();
 
     }
@@ -35,7 +46,7 @@ public class UserResource {
     @GET
     public Response listAllUsers(){
         //query.list lista as consultas das entidades
-        PanacheQuery<User> query = User.findAll();
+        PanacheQuery<User> query = userRepository.findAll();
         return Response.ok(query.list()).build();
     }
 
@@ -45,9 +56,9 @@ public class UserResource {
     // PathParam: passando o parâmetro na URL
     // O @Transactional é necessário colocar para alterar a base de dados
     public Response deleteUser(@PathParam("id") Long id){
-        User user = User.findById(id);
+        User user = userRepository.findById(id);
         if (user != null){
-            user.delete();
+            userRepository.delete(user);
             return Response.ok().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
@@ -57,7 +68,7 @@ public class UserResource {
     @Path("{id}")
     @Transactional
     public Response updateUser(@PathParam("id") Long id, CreateUserRequest userData){
-        User user = User.findById(id);
+        User user = userRepository.findById(id);
         if(user != null){
             user.setName(userData.getName());
             user.setAge(userData.getAge());

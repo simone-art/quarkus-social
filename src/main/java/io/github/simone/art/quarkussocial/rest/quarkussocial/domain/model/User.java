@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name="users")
 //O PanacheEntityBase tem vários métodos embutidos pra manipular as entidades
-public class User extends PanacheEntityBase {
+public class User {
     @Id
     // anotation @Generated delega ao banco de dados fazer o id automático do objeto
     @GeneratedValue(strategy = GenerationType.IDENTITY)
