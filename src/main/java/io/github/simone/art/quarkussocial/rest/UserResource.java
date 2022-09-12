@@ -39,7 +39,9 @@ public class UserResource {
     public Response createUser(CreateUserRequest userRequest){
         Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(userRequest);
         if(!violations.isEmpty()){
-            return Response.status(400).build();
+            ConstraintViolation<CreateUserRequest> erro = violations.stream().findAny().get();
+            String erroMessage = erro.getMessage();
+            return Response.status(400).entity(erroMessage).build();
         }
         //Persistindo os dados do usuário no banco de dados
         User user = new User();
