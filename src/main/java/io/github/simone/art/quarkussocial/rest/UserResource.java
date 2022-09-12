@@ -9,9 +9,12 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 @Path("/users")
 // Anotação consumes permite definir o tipo de body a ser recebido
@@ -21,18 +24,23 @@ import javax.ws.rs.core.Response;
 public class UserResource {
 
     private UserRepository userRepository;
+    private Validator validator;
 
     @Inject
     //@Inject anotação pra fazer a injeção de dependência do repository
-    public UserResource(UserRepository userRepository){
+    public UserResource(UserRepository userRepository, Validator validator){
         this.userRepository = userRepository;
-
+        this.validator = validator;
     }
 
     @POST
     @Transactional
     //@Transactional é uma anotation que se requer pra fazer a manipulação do banco de dados
     public Response createUser(CreateUserRequest userRequest){
+        Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(userRequest);
+        if(!violations.isEmpty()){
+            return Response.status(400).build();
+        }
         //Persistindo os dados do usuário no banco de dados
         User user = new User();
         user.setName(userRequest.getName());

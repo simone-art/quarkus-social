@@ -4,6 +4,8 @@ package io.github.simone.art.quarkussocial.rest.quarkussocial.domain.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -15,8 +17,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
+    @NotBlank(message = "Name is required")
     private String name;
     @Column(name = "age")
+    @NotNull(message = "Age is required")
     private Integer age;
 
     public Long getId() {
